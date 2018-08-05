@@ -3,5 +3,11 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Println("Hello World")
+	x := 5
+	zero(&x)
+	fmt.Println(x) // x is 0
+}
+
+func zero(xPtr *int) {
+	*xPtr = 0
 }
