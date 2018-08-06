@@ -10,3 +10,12 @@ func TestAverage(t *testing.T) {
 		t.Log("The result is true")
 	}
 }
+
+func TestAdd(t *testing.T) {
+	a := add(10, 20)
+	if a != 30 {
+		t.Log("It's Error")
+	} else {
+		t.Log("It's True")
+	}
+}
