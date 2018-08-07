@@ -1,7 +1,33 @@
 package main
 
-import "fmt"
+import (
+	"crypto/sha256"
+	"encoding/base64"
+	"errors"
+	"fmt"
+	"log"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	someText := "Neil_Hsieh"
+	hash, err := hashTextTo32Bytes(someText)
+	if err != nil {
+		log.Println("Error Hash")
+	}
+	fmt.Printf("%s\n %s", hash, err)
+}
+
+func hashTextTo32Bytes(hashThis string) (hashed string, err error) {
+	if len(hashThis) == 0 {
+		return "", errors.New("No input supplied")
+	}
+
+	hasher := sha256.New()
+	hasher.Write([]byte(hashThis))
+
+	fmt.Println("hasher: ", hasher)
+
+	stringToSHA256 := base64.URLEncoding.EncodeToString(hasher.Sum(nil))
+
+	return stringToSHA256[:32], nil
 }
