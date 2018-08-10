@@ -18,6 +18,8 @@ func main() {
 }
 
 func hashTextTo32Bytes(hashThis string) (hashed string, err error) {
+
+	// 檢查是否有帶入字串
 	if len(hashThis) == 0 {
 		return "", errors.New("No input supplied")
 	}
