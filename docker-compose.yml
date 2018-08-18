@@ -1,0 +1,26 @@
+version: '2'
+
+services:
+  # go-pgsql:
+  #   image: postgres:alpine
+  #   ports:
+  #     - "54321:5432"
+  #   environment:
+  #     - POSTGRES_USER=postgres
+  #     - POSTGRES_PASSWORD=neil820724
+  #     - POSTGRES_DB=PracGO
+  # go-mysql:
+  #   image: mysql
+  #   command: --default-authentication-plugin=mysql_native_password
+  #   restart: always
+  #   ports:
+  #     - "3307:3306"
+  #   environment:
+  #     MYSQL_USER: root
+  #     MYSQL_ROOT_PASSWORD: neil820724
+  #     MYSQL_DATABASE: PracGO
+
+  go-adminer:
+    image: adminer
+    ports:
+      - "8080:8080"
