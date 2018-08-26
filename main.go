@@ -7,11 +7,17 @@ import (
 	_ "HTTP_GO/foo"
 )
 
-// 執行main前，會先執行init
+var global = conver()
+
+func conver() int {
+	return 100
+}
+
+// 執行main前，會先執行init，但是會在func宣告之後，所以global才會是0
 func init() {
-	fmt.Println("Hello Init")
+	global = 0
 }
 
 func main() {
-	fmt.Println("Hello World")
+	fmt.Println("global is", global)
 }
