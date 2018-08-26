@@ -46,4 +46,33 @@ func main() {
 	addValue2(&foo)
 	fmt.Println("After foo: ", foo)
 	fmt.Println("================")
+
+	// Slice 練習二
+	fmt.Println("")
+	fmt.Println("********第二種練習********")
+	bar := []string{"A", "B"}
+	fmt.Println("bar:", bar)
+
+	// 將bar的第1個位子的值，丟給temp
+	temp := bar[:1]
+	fmt.Println("temp:", temp)
+	fmt.Println("================")
+
+	// 改變temp值，bar會一同更改
+	s1 := append(temp, "C")
+	fmt.Println("bar:", bar)
+	fmt.Println("s1:", s1)
+	fmt.Println("================")
+
+	s2 := append(temp, "D")
+	fmt.Println("bar:", bar)
+	fmt.Println("s2:", s2)
+	fmt.Println("================")
+
+	// 無法正確更改bar的內容，因為bar的長度被定義為2
+	// 顧雖然s3有變動，但是不會影響bar的內容
+	s3 := append(temp, "E", "F")
+	fmt.Println("bar:", bar)
+	fmt.Println("s3:", s3)
+	fmt.Println("================")
 }
