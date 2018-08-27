@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	_ "HTTP_GO/car"
+)
 
 func main() {
 
