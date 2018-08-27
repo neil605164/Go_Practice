@@ -15,7 +15,7 @@ func (c *Car) SetName(name string) string {
 		c.Name = name
 	}
 
-	time.Sleep(10 * time.Second)
+	time.Sleep(1 * time.Second)
 
 	return c.Name
 }

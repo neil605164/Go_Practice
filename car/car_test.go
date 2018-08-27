@@ -4,6 +4,8 @@
 package car
 
 import (
+	"fmt"
+	"log"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -78,8 +80,15 @@ func TestCar_SetName(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+		// 產生local variable ，避免tt被覆蓋掉（必須）
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
+
+			// 分別印出當下的tt.args參數
+			log.Println(tt.args)
+			fmt.Println("===========")
+
 			c := &Car{
 				Name:  tt.fields.Name,
 				Price: tt.fields.Price,
