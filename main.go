@@ -38,6 +38,9 @@ func Random(min, max int) int {
 func pay(w http.ResponseWriter, r *http.Request) {
 	entry := currency{}
 
+	// 查看mu記憶體位址（0x874958）
+	fmt.Printf("mu in pay func memory loction is %p", mu)
+
 	//將以下程式碼lock住，不讓其他請求先行執行
 	mu.Lock()
 	// 當執行完畢pay handler最後一行後，會在執行defer底下的條件
@@ -68,6 +71,9 @@ func pay(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	// 查看mu記憶體位址（0x874958）
+	fmt.Printf("mu memory loction is %p", mu)
+
 	// 建立連線
 	session, err := mgo.Dial("localhost:8082")
 	if err != nil {
