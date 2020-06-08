@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -39,50 +40,63 @@ func TestHttpPost(t *testing.T) {
 	// 開啟 gin 測試模式
 	gin.SetMode(gin.TestMode)
 
-	// 建立新 http test
-	w := httptest.NewRecorder()
-	ctx, r := gin.CreateTestContext(w)
-
-	// 定義測試用路徑，並指向特定 handler
-	r.POST("/pong", MyHandler)
-
+	// 測定測試內容
 	tests := []struct {
-		name       string                 // 測試名稱(說明)
-		want       map[string]interface{} // 輸入的參數
-		haveErr    bool                   // 是否有 error
-		bindStruct interface{}            // 被繫結的結構體
-		errMsg     string                 // 如果有錯，錯誤資訊
+		name string                 // 測試名稱(說明)
+		want map[string]interface{} // 輸入的參數
 	}{
 		{
-			name:    "Set Value ABC",
-			want:    map[string]interface{}{"A": "ABC"},
-			haveErr: false,
-			bindStruct: &struct {
-				A string `form:"a" json:"a"`
-			}{},
+			name: "Set Value ABC",
+			want: map[string]interface{}{"a": "ABC"},
+		},
+		{
+			name: "Set Value 123",
+			want: map[string]interface{}{"a": "123"},
 		},
 	}
 
-	for k := range tests {
+	// 開始執行測試
+	for _, tt := range tests {
+		// 建立新 http test
+		w := httptest.NewRecorder()
+		ctx, r := gin.CreateTestContext(w)
+
+		// 定義測試用路徑，並指向特定 handler
+		r.POST("/pong", MyHandler02)
 
 		form := url.Values{}
-		// 設定form data
-		for wk, wv := range tests[k].want {
-			form.Add(wk, fmt.Sprint(wv))
-		}
+		t.Run(tt.name, func(t *testing.T) {
 
-		ctx.Request = httptest.NewRequest(http.MethodPost, "/pong", strings.NewReader(form.Encode()))
+			// 平行處理
+			t.Parallel()
 
-		// 這個很關鍵
-		ctx.Request.Header.Add("Content-Type", binding.MIMEPOSTForm)
+			// 設定form data
+			for wk, wv := range tt.want {
+				form.Add(wk, fmt.Sprint(wv))
+			}
 
-		// 開始執行
-		r.ServeHTTP(w, ctx.Request)
+			ctx.Request = httptest.NewRequest(http.MethodPost, "/pong", strings.NewReader(form.Encode()))
 
-		// 結果處理
-		t.Log(ctx.Request.URL)
-		t.Log(string(w.Body.Bytes()))
+			// 這個很關鍵，設定 header 為 application/x-www-form-urlencoded
+			ctx.Request.Header.Add("Content-Type", binding.MIMEPOSTForm)
 
-		assert.Equal(t, "{a:ABC}", w.Body.Bytes(), "correct")
+			// 開始執行
+			r.ServeHTTP(w, ctx.Request)
+
+			// 處理回傳資料
+			res := map[string]interface{}{}
+			err := json.Unmarshal(w.Body.Bytes(), &res)
+			assert.NoError(t, err, "json unmarshal error")
+
+			for _, wv := range tt.want {
+				if wv == "123" {
+					assert.NotEqual(t, tt.want, res, "Not equal correct")
+				} else {
+					// 檢查是否相同
+					assert.Equal(t, tt.want, res, "Equal correct") //true
+				}
+			}
+
+		})
 	}
 }

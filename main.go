@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,6 +24,12 @@ func MyHandler(c *gin.Context) {
 func MyHandler02(c *gin.Context) {
 
 	val := c.PostForm("a")
+
+	if val == "123" {
+		val = "456"
+	}
+
+	time.Sleep(time.Second * 1)
 
 	c.JSON(http.StatusOK, gin.H{
 		"a": val,
