@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Go_Practice/app/handler"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,8 +15,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TestHttpGet 測試 handlet 連線
-func TestHttpGet(t *testing.T) {
+// TestMyHandler01 測試 handlet 連線
+func TestMyHandler01(t *testing.T) {
 	// 開啟 gin 測試模式
 	gin.SetMode(gin.TestMode)
 
@@ -23,7 +24,7 @@ func TestHttpGet(t *testing.T) {
 	ctx, r := gin.CreateTestContext(w)
 
 	// 定義測試用路徑，並指向特定 handler
-	r.GET("/hand01", MyHandler01)
+	r.GET("/hand01", handler.MyHandler01)
 
 	ctx.Request = httptest.NewRequest(http.MethodGet, "/hand01", nil)
 
@@ -32,11 +33,10 @@ func TestHttpGet(t *testing.T) {
 
 	t.Log(ctx.Request.URL)
 	t.Log(string(w.Body.Bytes()))
-
 }
 
-// TestHttpPostWithFormData 透過 form data 測試 handler 連線
-func TestHttpPostWithFormData(t *testing.T) {
+// TestMyHandler02 透過 form data 測試 handler 連線
+func TestMyHandler02(t *testing.T) {
 	// 開啟 gin 測試模式
 	gin.SetMode(gin.TestMode)
 
@@ -62,7 +62,7 @@ func TestHttpPostWithFormData(t *testing.T) {
 		ctx, r := gin.CreateTestContext(w)
 
 		// 定義測試用路徑，並指向特定 handler
-		r.POST("/hand02", MyHandler02)
+		r.POST("/hand02", handler.MyHandler02)
 
 		form := url.Values{}
 		t.Run(tt.name, func(t *testing.T) {
@@ -101,8 +101,8 @@ func TestHttpPostWithFormData(t *testing.T) {
 	}
 }
 
-// TestHttpPostWithRawData 透過 rawdata 測試 handler 連線
-func TestHttpPostWithRawData(t *testing.T) {
+// TestMyHandler03 透過 rawdata 測試 handler 連線
+func TestMyHandler03(t *testing.T) {
 	// 開啟 gin 測試模式
 	gin.SetMode(gin.TestMode)
 
@@ -142,7 +142,7 @@ func TestHttpPostWithRawData(t *testing.T) {
 			ctx, r := gin.CreateTestContext(w)
 
 			// 定義測試用路徑，並指向特定 handler
-			r.POST("/hand03", MyHandler03)
+			r.POST("/hand03", handler.MyHandler03)
 
 			// 處理參數
 			byteData, err := json.Marshal(tt.want)
