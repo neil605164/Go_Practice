@@ -73,3 +73,23 @@ func MyHandler04(c *gin.Context) {
 		"res": res,
 	})
 }
+
+func MyHandler05(c *gin.Context) {
+	// 取參數
+	req := formData{}
+	if err := c.ShouldBind(&req); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res": err,
+		})
+
+		return
+	}
+
+	// New interface 接口
+	bus := business.NewBusiness()
+	res := bus.Api(req.A, req.B)
+
+	c.JSON(http.StatusOK, gin.H{
+		"res": res,
+	})
+}

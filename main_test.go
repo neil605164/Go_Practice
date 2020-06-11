@@ -228,3 +228,61 @@ func TestMyHandler04(t *testing.T) {
 		})
 	}
 }
+
+// TestMyHandler05 測試呼叫 api ,並檢查對方式否真的被請求
+// 依然會呼叫對方 api 造成對方一條 request
+func TestMyHandler05(t *testing.T) {
+	// 開啟 gin 測試模式
+	gin.SetMode(gin.TestMode)
+
+	// 定義參數規則
+	type Fields struct {
+		A int8
+		B int8
+	}
+
+	// 設定參數內容
+	tests := []struct {
+		name string
+		want map[string]interface{}
+	}{
+		{
+			name: "input 5 and 9",
+			want: map[string]interface{}{"a": 5, "b": 9},
+		},
+		{
+			name: "input 6 and 127",
+			want: map[string]interface{}{"a": 6, "b": 127},
+		},
+	}
+
+	// 開始執行測試
+	for _, tt := range tests {
+		// 建立新 http test
+		w := httptest.NewRecorder()
+		ctx, r := gin.CreateTestContext(w)
+
+		// 定義測試用路徑，並指向特定 handler
+		r.GET("/hand05", handler.MyHandler05)
+
+		t.Run(tt.name, func(t *testing.T) {
+
+			// 設定 request 內容
+			ctx.Request = httptest.NewRequest(http.MethodGet, "/hand05", nil)
+
+			// 設定參數
+			q := ctx.Request.URL.Query()
+			for wk, wv := range tt.want {
+				q.Add(wk, fmt.Sprint(wv))
+			}
+
+			ctx.Request.URL.RawQuery = q.Encode()
+			// 開始執行
+			r.ServeHTTP(w, ctx.Request)
+
+			// 處理回傳資料
+			t.Log(ctx.Request.URL)        // 查看呼叫的路徑 /hand04?a=6&b=127
+			t.Log(string(w.Body.Bytes())) // 查看回傳結果
+		})
+	}
+}
