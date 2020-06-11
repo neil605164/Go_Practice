@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"Go_Practice/app/business"
 	"net/http"
 	"time"
 
@@ -48,6 +49,27 @@ func MyHandler03(c *gin.Context) {
 	c.JSON(http.StatusOK, req)
 }
 
-func MyHandler04(c *gin.Context) {
+type formData struct {
+	A int8 `form:"a" binding:"required"`
+	B int8 `form:"b"`
+}
 
+func MyHandler04(c *gin.Context) {
+	// 取參數
+	req := formData{}
+	if err := c.ShouldBind(&req); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res": err,
+		})
+
+		return
+	}
+
+	// New interface 接口
+	bus := business.NewBusiness()
+	res := bus.Add(req.A, req.B)
+
+	c.JSON(http.StatusOK, gin.H{
+		"res": res,
+	})
 }

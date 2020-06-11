@@ -11,7 +11,7 @@ func main() {
 	r.GET("/hand01", handler.MyHandler01)
 	r.POST("/hand02", handler.MyHandler02)
 	r.POST("/hand03", handler.MyHandler03)
-	r.POST("/hand04", handler.MyHandler04)
+	r.GET("/hand04", handler.MyHandler04)
 
 	r.Run(":9698")
 }
