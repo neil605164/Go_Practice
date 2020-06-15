@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"Go_Practice/router"
+
+	"github.com/gin-gonic/gin"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	r := gin.Default()
+
+	// 載入 router
+	router.LoadApiRouter(r)
+
+	r.Run(":9698")
 }
