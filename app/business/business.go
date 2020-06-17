@@ -10,20 +10,20 @@ import (
 
 type Request struct{}
 
-// BInter interface 接口
-type BInter interface {
-	Add(a, b int8) int8
-	Api(a, b int8) int
+// IBusiness interface 接口
+type IBusiness interface {
+	Add(a, b int64) int64
+	Api(a, b int) int
 }
 
-func NewBusiness() BInter {
+func NewBusiness() IBusiness {
 	// 初始化
 	return &Request{}
 }
 
 // Add 加法
-func (r *Request) Add(a, b int8) int8 {
-	fmt.Println("I'm in business")
+func (r *Request) Add(a, b int64) int64 {
+	fmt.Println("I'm in add business")
 	return a + b
 }
 
@@ -32,10 +32,10 @@ type Resp struct {
 }
 
 // Api 呼叫 api
-func (r *Request) Api(a, b int8) int {
-	fmt.Println("I'm in business")
+func (r *Request) Api(a, b int) int {
+	fmt.Println("I'm in api business")
 
-	url := fmt.Sprintf("http://localhost:7897/service?a=%d&b=%d", a, b)
+	url := fmt.Sprintf("http://localhost:7897/service?a=%v&b=%v", a, b)
 
 	fmt.Println(url)
 
