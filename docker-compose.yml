@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  redis_go_prac:
+    image: redis:alpine3.12
+    container_name: redis_go_prac
+    # 設定最大的TCP連線
+    sysctls:
+      net.core.somaxconn: 4096
+    restart: always
+    volumes:
+    - ./docker/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+    - 6379:6379
+    command: redis-server /usr/local/etc/redis/redis.conf
+    # 指定使用那一條網路
+    networks:
+      - web_service
+
+
+  db_go_prac:
+    image: mariadb:10.5.3
+    container_name: go_pracDB
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root # DB 密碼
+      MYSQL_DATABASE: go_prac
+    # volumes:
+    #   - /home/guava/database:/var/lib/mysql
+    networks:
+      - web_service
+
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: PHPmyadmin
+  #   environment:
+  #       - PMA_ARBITRARY=1
+  #       # - PMA_HOSTS=melon-db # 可供使用者選擇伺服器
+  #   restart: always
+  #   ports:
+  #       - 5555:80
+  #   networks:
+  #     - web_service
+
+networks:
+  web_service:
+    external: true

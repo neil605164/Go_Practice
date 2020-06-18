@@ -1,6 +1,7 @@
 package business
 
 import (
+	"Go_Practice/app/repository"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -8,17 +9,22 @@ import (
 	"git.cchntek.com/rd3-pkg/go-curl"
 )
 
-type Request struct{}
+type Request struct {
+	Redis repository.IRedis // 定義繼承 interface 接口
+}
 
 // IBusiness interface 接口
 type IBusiness interface {
 	Add(a, b int64) int64
 	Api(a, b int) int
+	GetRedis(key string) (value string, err error)
 }
 
 func NewBusiness() IBusiness {
 	// 初始化
-	return &Request{}
+	return &Request{
+		Redis: repository.RedisIns(),
+	}
 }
 
 // Add 加法
@@ -60,4 +66,11 @@ func (r *Request) Api(a, b int) int {
 	}
 
 	return res.Res
+}
+
+// GetRedis 取 redis 值
+func (r *Request) GetRedis(key string) (value string, err error) {
+
+	value, err = r.Redis.Get(key)
+	return
 }
