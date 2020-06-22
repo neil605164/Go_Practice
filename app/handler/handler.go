@@ -36,24 +36,31 @@ func (h *Handler) MyHandler01(c *gin.Context) {
 func (h *Handler) MyHandler02(c *gin.Context) {
 	key := c.Query("key")
 
+	time.Sleep(time.Second * 1)
+
 	value, err := h.BInter.GetRedis(key)
 	if err != nil {
 
 		fmt.Println(err)
 		c.JSON(http.StatusOK, gin.H{
-			"res": err,
+			"res": err.Error(),
 		})
+		return
 	}
 
 	num, err := strconv.Atoi(value)
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusOK, gin.H{
-			"res": err,
+			"res": err.Error(),
 		})
+		return
 	}
 
+	// 進行加總
 	res := num + 10
+
+	// 回傳結果
 	c.JSON(http.StatusOK, gin.H{
 		"res": res,
 	})
