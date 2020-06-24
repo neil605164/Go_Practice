@@ -1,6 +1,7 @@
 package business
 
 import (
+	"Go_Practice/app/global/structs"
 	"Go_Practice/app/repository"
 	"encoding/json"
 	"fmt"
@@ -11,6 +12,7 @@ import (
 
 type Request struct {
 	Redis repository.IRedis // 定義繼承 interface 接口
+	DB    repository.IDB
 }
 
 // IBusiness interface 接口
@@ -18,12 +20,14 @@ type IBusiness interface {
 	Add(a, b int64) int64
 	Api(a, b int) int
 	GetRedis(key string) (value string, err error)
+	StoreDBInfo(req structs.RawData) (err error)
 }
 
 func NewBusiness() IBusiness {
 	// 初始化
 	return &Request{
 		Redis: repository.RedisIns(),
+		DB:    repository.DBIns(),
 	}
 }
 
@@ -72,5 +76,17 @@ func (r *Request) Api(a, b int) int {
 func (r *Request) GetRedis(key string) (value string, err error) {
 
 	value, err = r.Redis.Get(key)
+	return
+}
+
+// StoreDBInfo 存值進入 DB
+func (r *Request) StoreDBInfo(req structs.RawData) (err error) {
+
+	// 將值存入 DB
+	if err = r.DB.SetUserInfo(req); err != nil {
+		return
+	}
+	fmt.Println(req)
+
 	return
 }

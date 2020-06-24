@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+
   redis_go_prac:
     image: redis:alpine3.12
     container_name: redis_go_prac
@@ -25,6 +26,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root # DB 密碼
       MYSQL_DATABASE: go_prac
+    ports:
+    - 3307:3306
     # volumes:
     #   - /home/guava/database:/var/lib/mysql
     networks:

@@ -65,3 +65,28 @@ func (h *Handler) MyHandler02(c *gin.Context) {
 		"res": res,
 	})
 }
+
+// MyHandler03 測試呼叫 DB 使用 mock 做測試
+func (h *Handler) MyHandler03(c *gin.Context) {
+	var err error
+
+	// 取參數
+	req := structs.RawData{}
+	if err = c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res": err,
+		})
+		return
+	}
+
+	if err = h.BInter.StoreDBInfo(req); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res": err,
+		})
+		return
+	}
+	// 回傳結果
+	c.JSON(http.StatusOK, gin.H{
+		"res": req,
+	})
+}
