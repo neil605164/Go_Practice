@@ -82,6 +82,8 @@ func (r *Request) GetRedis(key string) (value string, err error) {
 // StoreDBInfo 存值進入 DB
 func (r *Request) StoreDBInfo(req structs.RawData) (err error) {
 
+	// 其他邏輯處理
+
 	// 將值存入 DB
 	if err = r.DB.SetUserInfo(req); err != nil {
 		return

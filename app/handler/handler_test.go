@@ -2,7 +2,9 @@ package handler
 
 import (
 	"Go_Practice/app/business"
+	"Go_Practice/app/global/structs"
 	"Go_Practice/mocks"
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -216,6 +218,95 @@ func TestHandler_MyHandler02(t *testing.T) {
 				require.NoError(t, err, "json unmarshal actual response error")
 
 				require.Equal(t, num+10, actual.Res, "value is not equal")
+			}
+		})
+	}
+}
+
+func TestHandler_MyHandler03(t *testing.T) {
+	// 開啟 gin 測試模式
+	gin.SetMode(gin.TestMode)
+
+	// new mock
+	m := new(mocks.IBusiness)
+
+	type fields struct {
+		BInter business.IBusiness
+	}
+
+	type res struct {
+		Res structs.RawData
+	}
+
+	tests := []struct {
+		name   string
+		fields fields
+		args   structs.RawData
+		errMsg error
+		hasErr bool
+	}{
+		{
+			name: "input correct value",
+			fields: fields{
+				BInter: m,
+			},
+			args: structs.RawData{
+				Name:  "Neil",
+				Phone: "09XX-XXX-OOO",
+				Age:   26,
+			},
+			errMsg: nil,
+			hasErr: false,
+		},
+		{
+			name: "input correct value",
+			fields: fields{
+				BInter: m,
+			},
+			args: structs.RawData{
+				Name:  "Neil",
+				Phone: "09XX-XXX-OOO",
+				Age:   26,
+			},
+			errMsg: errors.New("something error"),
+			hasErr: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+
+			// 開始寫要跳脫的 mock
+			m.On("StoreDBInfo", tt.args).Return(tt.errMsg)
+
+			// 初始化 gin context
+			w := httptest.NewRecorder()
+			ctx, _ := gin.CreateTestContext(w)
+
+			// 處理帶入的參數
+			byteData, err := json.Marshal(tt.args)
+			assert.NoError(t, err, "json marshal error")
+
+			// 設定 request 內容
+			ctx.Request = httptest.NewRequest(http.MethodPost, "/hand03", bytes.NewBuffer(byteData))
+
+			h := &Handler{
+				BInter: tt.fields.BInter,
+			}
+			h.MyHandler03(ctx)
+
+			// 處理結果
+			resp := res{}
+			err = json.Unmarshal(w.Body.Bytes(), &resp)
+			assert.NoError(t, err, "json unmarshal error")
+
+			expected := structs.RawData{}
+			err = json.Unmarshal(byteData, &expected)
+			assert.NoError(t, err, "json unmarshal error")
+
+			if !tt.hasErr {
+				assert.Equal(t, expected, resp.Res, "same response")
+			} else {
+				assert.Error(t, tt.errMsg, "something error")
 			}
 		})
 	}

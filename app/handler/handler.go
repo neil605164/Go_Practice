@@ -2,7 +2,6 @@ package handler
 
 import (
 	"Go_Practice/app/global/structs"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -40,8 +39,6 @@ func (h *Handler) MyHandler02(c *gin.Context) {
 
 	value, err := h.BInter.GetRedis(key)
 	if err != nil {
-
-		fmt.Println(err)
 		c.JSON(http.StatusOK, gin.H{
 			"res": err.Error(),
 		})
@@ -50,7 +47,6 @@ func (h *Handler) MyHandler02(c *gin.Context) {
 
 	num, err := strconv.Atoi(value)
 	if err != nil {
-		fmt.Println(err)
 		c.JSON(http.StatusOK, gin.H{
 			"res": err.Error(),
 		})
@@ -74,17 +70,19 @@ func (h *Handler) MyHandler03(c *gin.Context) {
 	req := structs.RawData{}
 	if err = c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"res": err,
+			"res": err.Error(),
 		})
 		return
 	}
 
+	// 寫資料進 DB
 	if err = h.BInter.StoreDBInfo(req); err != nil {
 		c.JSON(http.StatusOK, gin.H{
-			"res": err,
+			"res": err.Error(),
 		})
 		return
 	}
+
 	// 回傳結果
 	c.JSON(http.StatusOK, gin.H{
 		"res": req,
