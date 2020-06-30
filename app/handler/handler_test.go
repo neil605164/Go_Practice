@@ -119,11 +119,11 @@ func TestHandler_MyHandler01(t *testing.T) {
 			t.Log(expected)
 
 			assert.Equal(t, expected, actual.A, "value is not equal")
-		})
-	}
 
-	if !m.AssertExpectations(t) {
-		t.Fail()
+			if !m.AssertExpectations(t) {
+				t.Fail()
+			}
+		})
 	}
 }
 
@@ -218,6 +218,10 @@ func TestHandler_MyHandler02(t *testing.T) {
 				require.NoError(t, err, "json unmarshal actual response error")
 
 				require.Equal(t, num+10, actual.Res, "value is not equal")
+
+				if !m.AssertExpectations(t) {
+					t.Fail()
+				}
 			}
 		})
 	}
@@ -273,7 +277,12 @@ func TestHandler_MyHandler03(t *testing.T) {
 		},
 	}
 	for _, tt := range tests {
+
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+
+			// 平行處理
+			t.Parallel()
 
 			// 開始寫要跳脫的 mock
 			m.On("StoreDBInfo", tt.args).Return(tt.errMsg)
@@ -307,6 +316,10 @@ func TestHandler_MyHandler03(t *testing.T) {
 				assert.Equal(t, expected, resp.Res, "same response")
 			} else {
 				assert.Error(t, tt.errMsg, "something error")
+			}
+
+			if !m.AssertExpectations(t) {
+				t.Fail()
 			}
 		})
 	}

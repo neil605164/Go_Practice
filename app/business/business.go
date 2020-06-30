@@ -4,6 +4,7 @@ import (
 	"Go_Practice/app/global/structs"
 	"Go_Practice/app/repository"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 
@@ -83,6 +84,9 @@ func (r *Request) GetRedis(key string) (value string, err error) {
 func (r *Request) StoreDBInfo(req structs.RawData) (err error) {
 
 	// 其他邏輯處理
+	if req.Age == 27 {
+		return errors.New("The age is wrong")
+	}
 
 	// 將值存入 DB
 	if err = r.DB.SetUserInfo(req); err != nil {
