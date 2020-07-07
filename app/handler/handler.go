@@ -88,3 +88,22 @@ func (h *Handler) MyHandler03(c *gin.Context) {
 		"res": req,
 	})
 }
+
+// MyHandler04 測試呼叫 DB 使用 mock 做測試
+func (h *Handler) MyHandler04(c *gin.Context) {
+	var err error
+
+	// 寫資料進 DB
+	resp, err := h.BInter.GetDBUserInfo2()
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res": err.Error(),
+		})
+		return
+	}
+
+	// 回傳結果
+	c.JSON(http.StatusOK, gin.H{
+		"res": resp,
+	})
+}

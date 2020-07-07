@@ -22,6 +22,8 @@ type IBusiness interface {
 	Api(a, b int) int
 	GetRedis(key string) (value string, err error)
 	StoreDBInfo(req structs.RawData) (err error)
+	GetDBUserInfo() (resp []structs.DBResp, err error)
+	GetDBUserInfo2() (resp structs.DBResp, err error)
 }
 
 func NewBusiness() IBusiness {
@@ -93,6 +95,49 @@ func (r *Request) StoreDBInfo(req structs.RawData) (err error) {
 		return
 	}
 	fmt.Println(req)
+
+	return
+}
+
+// GetDBUserInfo 取 DB 資料
+func (r *Request) GetDBUserInfo() (resp []structs.DBResp, err error) {
+
+	// 取 DB
+	dbData, err := r.DB.GetUserInfo()
+	if err != nil {
+		return
+	}
+
+	fmt.Println(dbData)
+
+	// 整理回傳資料 + 初始化
+	resp = []structs.DBResp{}
+	for k := range dbData {
+		tmp := structs.DBResp{}
+
+		tmp.ID = dbData[k].ID
+		tmp.Name = dbData[k].Name
+		tmp.Phone = dbData[k].Phone
+		tmp.Age = dbData[k].Age
+
+		resp = append(resp, tmp)
+	}
+	return
+}
+
+func (r *Request) GetDBUserInfo2() (resp structs.DBResp, err error) {
+
+	// 取 DB
+	dbData, err := r.DB.GetUserInfo2()
+	if err != nil {
+		return
+	}
+
+	// 整理回傳資料 + 初始化
+	resp.ID = dbData.ID
+	resp.Name = dbData.Name
+	resp.Phone = dbData.Phone
+	resp.Age = dbData.Age
 
 	return
 }
