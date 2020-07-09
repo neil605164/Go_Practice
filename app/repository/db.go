@@ -46,6 +46,8 @@ func (db *DB) SetUserInfo(req structs.RawData) (err error) {
 		Name:  req.Name,
 		Phone: req.Phone,
 		Age:   req.Age,
+		// CreatedAt: time.Now().UTC(),
+		// UpdatedAt: time.Now().UTC(),
 	}
 
 	if err = db.dbcon.Create(&user).Error; err != nil {

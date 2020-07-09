@@ -23,7 +23,6 @@ type IBusiness interface {
 	GetRedis(key string) (value string, err error)
 	StoreDBInfo(req structs.RawData) (err error)
 	GetDBUserInfo() (resp []structs.DBResp, err error)
-	GetDBUserInfo2() (resp structs.DBResp, err error)
 }
 
 func NewBusiness() IBusiness {
@@ -122,22 +121,5 @@ func (r *Request) GetDBUserInfo() (resp []structs.DBResp, err error) {
 
 		resp = append(resp, tmp)
 	}
-	return
-}
-
-func (r *Request) GetDBUserInfo2() (resp structs.DBResp, err error) {
-
-	// 取 DB
-	dbData, err := r.DB.GetUserInfo2()
-	if err != nil {
-		return
-	}
-
-	// 整理回傳資料 + 初始化
-	resp.ID = dbData.ID
-	resp.Name = dbData.Name
-	resp.Phone = dbData.Phone
-	resp.Age = dbData.Age
-
 	return
 }

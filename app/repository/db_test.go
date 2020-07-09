@@ -1,9 +1,12 @@
 package repository
 
 import (
+	"Go_Practice/app/global/structs"
 	"Go_Practice/app/model"
 	"database/sql"
+	"database/sql/driver"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/jinzhu/gorm"
@@ -17,8 +20,15 @@ type TUser struct {
 	DB   *gorm.DB
 	mock sqlmock.Sqlmock
 
-	repo     IDB
-	expected []model.User
+	repo IDB
+}
+
+type AnyTime struct{}
+
+// Match satisfies sqlmock.Argument interface
+func (a AnyTime) Match(v driver.Value) bool {
+	_, ok := v.(time.Time)
+	return ok
 }
 
 func (u *TUser) SetupSuite() {
@@ -40,15 +50,20 @@ func (u *TUser) SetupSuite() {
 	// 初始化 repo
 	u.repo = testCreateRepository(u.DB)
 }
+
+func (u *TUser) AfterTest(_, _ string) {
+	// make sure all expectation were met
+	require.NoError(u.T(), u.mock.ExpectationsWereMet())
+}
+
 func TestInit(t *testing.T) {
 	suite.Run(t, new(TUser))
 }
 
 func (u *TUser) TestDB_GetUserInfo() {
-	defer u.DB.Close()
 
 	// 預設回傳資料
-	u.expected = []model.User{
+	expected := []model.User{
 		{
 			ID:    1,
 			Name:  "Neil",
@@ -62,14 +77,40 @@ func (u *TUser) TestDB_GetUserInfo() {
 		AddRow("1", "Neil", "09XX-XXX-OOO", "26")
 
 	// 執行語法
-	u.mock.ExpectQuery(query).
-		WillReturnRows(rows)
+	u.mock.ExpectQuery(query).WillReturnRows(rows)
 
+	// 戳 DB Function
 	res, err := u.repo.GetUserInfo()
-
 	require.NoError(u.T(), err)
 
-	require.Equal(u.T(), u.expected, res, "Return alue not same")
+	// 檢查是否與預期的 value 相同
+	require.Equal(u.T(), expected, res, "Return alue not same")
+}
 
-	require.NoError(u.T(), u.mock.ExpectationsWereMet())
+func (u *TUser) TestDB_SetUserInfo() {
+
+	// Inset Value
+	param := structs.RawData{
+		Name:  "Jay",
+		Phone: "09ZZ-XXX-OOO",
+		Age:   24,
+	}
+
+	// sql query rule
+	query := "INSERT INTO `user`"
+
+	// transaction start
+	u.mock.ExpectBegin()
+
+	u.mock.ExpectExec(query).
+		WithArgs(param.Name, param.Phone, param.Age, AnyTime{}, AnyTime{}).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	// transaction end
+	u.mock.ExpectCommit()
+
+	// 戳 DB Function
+	err := u.repo.SetUserInfo(param)
+	require.NoError(u.T(), err)
+
 }

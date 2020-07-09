@@ -94,7 +94,7 @@ func (h *Handler) MyHandler04(c *gin.Context) {
 	var err error
 
 	// 寫資料進 DB
-	resp, err := h.BInter.GetDBUserInfo2()
+	resp, err := h.BInter.GetDBUserInfo()
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{
 			"res": err.Error(),

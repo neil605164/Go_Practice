@@ -64,27 +64,6 @@ func (_m *IBusiness) GetDBUserInfo() ([]structs.DBResp, error) {
 	return r0, r1
 }
 
-// GetDBUserInfo2 provides a mock function with given fields:
-func (_m *IBusiness) GetDBUserInfo2() (structs.DBResp, error) {
-	ret := _m.Called()
-
-	var r0 structs.DBResp
-	if rf, ok := ret.Get(0).(func() structs.DBResp); ok {
-		r0 = rf()
-	} else {
-		r0 = ret.Get(0).(structs.DBResp)
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
 // GetRedis provides a mock function with given fields: key
 func (_m *IBusiness) GetRedis(key string) (string, error) {
 	ret := _m.Called(key)
