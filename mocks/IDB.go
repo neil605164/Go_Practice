@@ -15,6 +15,20 @@ type IDB struct {
 	mock.Mock
 }
 
+// DeleteUserInfo provides a mock function with given fields: id
+func (_m *IDB) DeleteUserInfo(id int) error {
+	ret := _m.Called(id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int) error); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetUserInfo provides a mock function with given fields:
 func (_m *IDB) GetUserInfo() ([]model.User, error) {
 	ret := _m.Called()
@@ -45,6 +59,20 @@ func (_m *IDB) SetUserInfo(req structs.RawData) error {
 	var r0 error
 	if rf, ok := ret.Get(0).(func(structs.RawData) error); ok {
 		r0 = rf(req)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// UpdateUserInfo provides a mock function with given fields: reqMap
+func (_m *IDB) UpdateUserInfo(reqMap map[string]interface{}) error {
+	ret := _m.Called(reqMap)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(map[string]interface{}) error); ok {
+		r0 = rf(reqMap)
 	} else {
 		r0 = ret.Error(0)
 	}

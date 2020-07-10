@@ -112,5 +112,48 @@ func (u *TUser) TestDB_SetUserInfo() {
 	// 戳 DB Function
 	err := u.repo.SetUserInfo(param)
 	require.NoError(u.T(), err)
+}
 
+func (u *TUser) TestDB_UpdateUserInfo() {
+	// Inset Value
+	param := make(map[string]interface{})
+	param["id"] = 1
+	param["name"] = "Jay"
+	param["phone"] = "09ZZ-XXX-OOO"
+	param["age"] = 24
+
+	// sql query rule
+	query := "UPDATE `user` SET (.+) WHERE (.+)"
+
+	// transaction start
+	u.mock.ExpectBegin()
+
+	u.mock.ExpectExec(query).
+		WithArgs(param["age"], param["id"], param["name"], param["phone"], AnyTime{}, param["id"]).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	// transaction end
+	u.mock.ExpectCommit()
+
+	// 戳 DB Function
+	err := u.repo.UpdateUserInfo(param)
+	require.NoError(u.T(), err)
+}
+
+func (u *TUser) TestDB_DeleteUserInfo() {
+	id := 1
+
+	// transaction start
+	u.mock.ExpectBegin()
+
+	u.mock.ExpectExec("DELETE FROM `user`  WHERE `user`.`id` = ?").
+		WithArgs(id).
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	// transaction end
+	u.mock.ExpectCommit()
+
+	// 戳 DB Function
+	err := u.repo.DeleteUserInfo(id)
+	require.NoError(u.T(), err)
 }

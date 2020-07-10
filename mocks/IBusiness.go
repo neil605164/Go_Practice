@@ -41,6 +41,20 @@ func (_m *IBusiness) Api(a int, b int) int {
 	return r0
 }
 
+// DeleteUserInfo provides a mock function with given fields: id
+func (_m *IBusiness) DeleteUserInfo(id int) error {
+	ret := _m.Called(id)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(int) error); ok {
+		r0 = rf(id)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // GetDBUserInfo provides a mock function with given fields:
 func (_m *IBusiness) GetDBUserInfo() ([]structs.DBResp, error) {
 	ret := _m.Called()
@@ -87,6 +101,20 @@ func (_m *IBusiness) GetRedis(key string) (string, error) {
 
 // StoreDBInfo provides a mock function with given fields: req
 func (_m *IBusiness) StoreDBInfo(req structs.RawData) error {
+	ret := _m.Called(req)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(structs.RawData) error); ok {
+		r0 = rf(req)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// UpdateUserInfo provides a mock function with given fields: req
+func (_m *IBusiness) UpdateUserInfo(req structs.RawData) error {
 	ret := _m.Called(req)
 
 	var r0 error

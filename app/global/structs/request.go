@@ -6,6 +6,7 @@ type UrlQuery struct {
 }
 
 type RawData struct {
+	ID    int    `json:"id"`
 	Name  string `json:"name"`
 	Phone string `json:"phone"`
 	Age   int    `json:"age"`

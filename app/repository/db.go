@@ -12,6 +12,8 @@ import (
 type IDB interface {
 	SetUserInfo(req structs.RawData) (err error)
 	GetUserInfo() (resp []model.User, err error)
+	UpdateUserInfo(reqMap map[string]interface{}) (err error)
+	DeleteUserInfo(id int) (err error)
 }
 
 // DB 存取值
@@ -46,8 +48,6 @@ func (db *DB) SetUserInfo(req structs.RawData) (err error) {
 		Name:  req.Name,
 		Phone: req.Phone,
 		Age:   req.Age,
-		// CreatedAt: time.Now().UTC(),
-		// UpdatedAt: time.Now().UTC(),
 	}
 
 	if err = db.dbcon.Create(&user).Error; err != nil {
@@ -75,12 +75,30 @@ func (db *DB) GetUserInfo() (resp []model.User, err error) {
 	return
 }
 
-// 目前這情況，可能會有 test 連線覆蓋正常連線問題，需要在測試
-func testCreateRepository(db *gorm.DB) IDB {
-	// dbOnce.Do(func() {
-	dbSingleton = &DB{
-		dbcon: db,
+// UpdateUserInfo 更新用戶資訊
+func (db *DB) UpdateUserInfo(reqMap map[string]interface{}) (err error) {
+	if db.dbcon == nil {
+		// 取 DB 連線
+		db.dbcon, err = model.MasterConnect()
+		if err != nil {
+			return
+		}
 	}
-	// })
-	return dbSingleton
+
+	// update user
+	return db.dbcon.Model(&model.User{}).Updates(reqMap).Error
+}
+
+// DeleteUserInfo 刪除用戶資料
+func (db *DB) DeleteUserInfo(id int) (err error) {
+	if db.dbcon == nil {
+		// 取 DB 連線
+		db.dbcon, err = model.MasterConnect()
+		if err != nil {
+			return
+		}
+	}
+
+	// delete user
+	return db.dbcon.Delete(&model.User{ID: id}).Error
 }

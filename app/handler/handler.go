@@ -107,3 +107,57 @@ func (h *Handler) MyHandler04(c *gin.Context) {
 		"res": resp,
 	})
 }
+
+// MyHandler05 測試呼叫 DB 使用 mock 做測試
+func (h *Handler) MyHandler05(c *gin.Context) {
+
+	// 取參數
+	req := structs.RawData{}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res": err.Error(),
+		})
+		return
+	}
+
+	// 寫資料進 DB
+	if err := h.BInter.UpdateUserInfo(req); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res": err.Error(),
+		})
+		return
+	}
+
+	// 回傳結果
+	c.JSON(http.StatusOK, gin.H{
+		"res": req,
+	})
+}
+
+// MyHandler06 測試呼叫 DB 使用 mock 做測試
+func (h *Handler) MyHandler06(c *gin.Context) {
+
+	// 取參數
+	idStr := c.Query("id")
+
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res": err.Error(),
+		})
+		return
+	}
+
+	// 寫資料進 DB
+	if err := h.BInter.DeleteUserInfo(id); err != nil {
+		c.JSON(http.StatusOK, gin.H{
+			"res": err.Error(),
+		})
+		return
+	}
+
+	// 回傳結果
+	c.JSON(http.StatusOK, gin.H{
+		"res": id,
+	})
+}

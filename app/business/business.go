@@ -1,6 +1,7 @@
 package business
 
 import (
+	"Go_Practice/app/global/helper"
 	"Go_Practice/app/global/structs"
 	"Go_Practice/app/repository"
 	"encoding/json"
@@ -23,6 +24,8 @@ type IBusiness interface {
 	GetRedis(key string) (value string, err error)
 	StoreDBInfo(req structs.RawData) (err error)
 	GetDBUserInfo() (resp []structs.DBResp, err error)
+	UpdateUserInfo(req structs.RawData) (err error)
+	DeleteUserInfo(id int) (err error)
 }
 
 func NewBusiness() IBusiness {
@@ -93,7 +96,6 @@ func (r *Request) StoreDBInfo(req structs.RawData) (err error) {
 	if err = r.DB.SetUserInfo(req); err != nil {
 		return
 	}
-	fmt.Println(req)
 
 	return
 }
@@ -121,5 +123,33 @@ func (r *Request) GetDBUserInfo() (resp []structs.DBResp, err error) {
 
 		resp = append(resp, tmp)
 	}
+	return
+}
+
+// UpdateUserInfo 更新 DB 資料
+func (r *Request) UpdateUserInfo(req structs.RawData) (err error) {
+
+	// struct to map
+	reqMap, err := helper.StructToMap(req)
+	if err != nil {
+		return
+	}
+
+	// 將值存入 DB
+	if err = r.DB.UpdateUserInfo(reqMap); err != nil {
+		return
+	}
+
+	return
+}
+
+// DeleteUserInfo 刪除 DB 資料
+func (r *Request) DeleteUserInfo(id int) (err error) {
+
+	// 將值存入 DB
+	if err = r.DB.DeleteUserInfo(id); err != nil {
+		return
+	}
+
 	return
 }
