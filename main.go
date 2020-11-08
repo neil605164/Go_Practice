@@ -30,24 +30,55 @@ func main() {
 		panic(err)
 	}
 
-	// choose Table
-	c := chooseTable("people", db)
-
 	// Insert Data
-	// if err = InsertData(c, db); err != nil {
+	// if err = InsertData(db); err != nil {
 	// 	fmt.Println("++++>", err)
 	// 	panic(err)
 	// }
 
 	// Select Data
 	res := Person{}
-	res, err = SelectData(c, db, res)
+	res, err = SelectData(db, res)
 	if err != nil {
 		fmt.Println("---->", err)
 		log.Fatal(err)
 	}
 
 	fmt.Println("Phone:", res.Phone)
+
+	// Update Data
+	row := Person{
+		Name:  "Ale",
+		Phone: "09SS-XXX-OOO",
+	}
+	if err = UpdateData(db, row); err != nil {
+		fmt.Println("~~~~>", err)
+		log.Fatal(err)
+	}
+
+	// Select Data
+	res, err = SelectData(db, res)
+	if err != nil {
+		fmt.Println("$$$$>", err)
+		log.Fatal(err)
+	}
+
+	fmt.Println("Phone:", res.Phone)
+
+	// Delete Data
+	if err = DeleteData(db, "Ale"); err != nil {
+		fmt.Println("%%%%>", err)
+		log.Fatal(err)
+	}
+
+	persons := []Person{}
+	list, err := SelectAll(db, persons)
+	if err != nil {
+		fmt.Println("&&&&>", err)
+		log.Fatal(err)
+	}
+
+	fmt.Println("Result:", list)
 }
 
 func dbCon() (*mgo.Session, error) {
@@ -80,8 +111,11 @@ func chooseTable(table string, db *mgo.Database) *mgo.Collection {
 	return db.C(table)
 }
 
-// Insert Data
-func InsertData(c *mgo.Collection, db *mgo.Database) error {
+// InsertData Insert Data
+func InsertData(db *mgo.Database) error {
+	// choose Table
+	c := chooseTable("people", db)
+
 	err := c.Insert(
 		&Person{"Ale", "+55 53 8116 9639"},
 		&Person{"Cla", "+55 53 8402 8510"},
@@ -90,13 +124,50 @@ func InsertData(c *mgo.Collection, db *mgo.Database) error {
 	return err
 }
 
-// Select Data
-func SelectData(c *mgo.Collection, db *mgo.Database, res Person) (Person, error) {
+// SelectData Select Data
+func SelectData(db *mgo.Database, res Person) (Person, error) {
+	// choose Table
+	c := chooseTable("people", db)
+
 	err := c.Find(bson.M{"name": "Ale"}).One(&res)
 	if err != nil {
-		fmt.Println("---->", err)
-		log.Fatal(err)
+		return res, err
 	}
 
+	return res, nil
+}
+
+// UpdateData Update Data
+func UpdateData(db *mgo.Database, row Person) error {
+
+	// choose Table
+	c := chooseTable("people", db)
+
+	err := c.Update(bson.M{"name": "Ale"}, &row)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// DeleteData Delete Data
+func DeleteData(db *mgo.Database, row string) error {
+	// choose Table
+	c := chooseTable("people", db)
+
+	if err := c.Remove(bson.M{"name": row}); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func SelectAll(db *mgo.Database, res []Person) ([]Person, error) {
+	// choose Table
+	c := chooseTable("people", db)
+
+	if err := c.Find(bson.M{}).All(&res); err != nil {
+		return res, err
+	}
 	return res, nil
 }
