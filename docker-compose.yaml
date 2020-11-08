@@ -1,0 +1,47 @@
+# Use root/example as user/password credentials
+version: '3.1'
+
+services:
+
+  golang-goformat:
+    # image: nexus.cqgame.games/rd3/golang-goformat:latest
+    build:
+      context: .
+    container_name: go-prac
+    restart: always
+    ports:
+      - 9999:8080
+    working_dir: /go/src/go-prac
+    volumes:
+      - .:/go/src/go-prac
+    networks:
+      - web_service
+    command: "fresh runner.conf"
+
+  mongo:
+    image: mongo
+    restart: always
+    container_name: go-prac-mgo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+    networks:
+      - web_service
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    container_name: mongo-admin
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: 123456
+    networks:
+      - web_service
+
+networks:
+  web_service:
+    external: true
