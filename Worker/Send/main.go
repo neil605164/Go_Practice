@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strings"
@@ -14,12 +15,12 @@ func main() {
 
 	// declare a queue
 	q, err := ch.QueueDeclare(
-		"hello", // name
-		false,   // durable
-		false,   // delete when unused
-		false,   // exclusive
-		false,   // no-wait
-		nil,     // arguments
+		"task_queue", // name
+		true,         // durable 防止 rabbitmq restart 重起後,資料遺失
+		false,        // delete when unused
+		false,        // exclusive
+		false,        // no-wait
+		nil,          // arguments
 	)
 
 	if err != nil {
@@ -28,21 +29,26 @@ func main() {
 
 	body := bodyFrom(os.Args)
 
-	err = ch.Publish(
-		"",     // exchange
-		q.Name, // routing key
-		false,  // mandatory
-		false,
-		amqp.Publishing{
-			DeliveryMode: amqp.Persistent,
-			ContentType:  "text/plain",
-			Body:         []byte(body),
-		})
+	for i := 0; i <= 100; i++ {
 
-	if err != nil {
-		log.Fatalf("%s: %s", "Failed to publish a message", err)
+		msg := fmt.Sprintf("%d,%v", i, body)
+
+		err = ch.Publish(
+			"",     // exchange
+			q.Name, // routing key
+			false,  // mandatory
+			false,
+			amqp.Publishing{
+				DeliveryMode: amqp.Persistent,
+				ContentType:  "text/plain",
+				Body:         []byte(msg),
+			})
+
+		if err != nil {
+			log.Fatalf("%s: %s", "Failed to publish a message", err)
+		}
+		log.Printf(" [x] Num %d Sent %s", i, body)
 	}
-	log.Printf(" [x] Sent %s", body)
 }
 
 func bodyFrom(args []string) string {

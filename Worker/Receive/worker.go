@@ -19,7 +19,7 @@ type AggregatorOption struct {
 func main() {
 	arg := AggregatorOption{
 		Timer:       time.Second * 60,
-		UpperLimmit: 5,
+		UpperLimmit: 1,
 	}
 
 	// 處理 MQ 事項
@@ -55,17 +55,28 @@ func MQHandle(arg AggregatorOption) error {
 
 	// declare a queue
 	q, err := ch.QueueDeclare(
-		"hello", // name
-		false,   // durable
-		false,   // delete when unused
-		false,   // exclusive
-		false,   // no-wait
-		nil,     // arguments
+		"task_queue", // name
+		true,         // durable 防止 rabbitmq restart 重起後,資料遺失
+		false,        // delete when unused
+		false,        // exclusive
+		false,        // no-wait
+		nil,          // arguments
 	)
 
 	if err != nil {
 		log.Fatalf("%s: %s", "Failed to declare a queue", err)
 		return err
+	}
+
+	// 平均分散到個台 work 上使數量相等(不一定要開啟)
+	err = ch.Qos(
+		1,     // prefetch count
+		0,     // prefetch size
+		false, // global
+	)
+
+	if err != nil {
+		log.Fatalf("%s: %s", "Failed to set QoS", err)
 	}
 
 	// receive queue
