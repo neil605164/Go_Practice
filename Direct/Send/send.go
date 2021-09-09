@@ -16,12 +16,12 @@ func main() {
 
 	// declare a queue
 	q, err := ch.QueueDeclare(
-		"hello", // name
-		false,   // durable
-		false,   // delete when unused
-		false,   // exclusive
+		"hello", // name (queue name)
+		false,   // durable (the queue will survive a broker restart)
+		false,   // delete when unused (queue that has had at least one consumer is deleted when last consumer unsubscribes)
+		false,   // exclusive  (used by only one connection and the queue will be deleted when that connection closes)
 		false,   // no-wait
-		nil,     // arguments
+		nil,     // arguments (optional; used by plugins and broker-specific features such as message TTL, queue length limit, etc)
 	)
 
 	if err != nil {

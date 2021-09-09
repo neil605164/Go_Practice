@@ -6,11 +6,15 @@
 
 ![](https://kucw.github.io/images/blog/rabbitmq_direct.png)
 
+---
+
 ## Worker 模式
 
 跟 Direct 模式很像，但是差別是 Worker 模式中會 同時 有多個 Consumer 會去消費 Queue 裡的 message，增加 message 消化的速率（一個人做很慢，大家一起做就很快）
 
 ![](https://kucw.github.io/images/blog/rabbitmq_worker.png)
+
+---
 
 ## Publish/Subscribe 模式
 在先前 ```Direct``` 與 ```Worker``` 模式底下，我們已經認知的角色有：
@@ -24,4 +28,13 @@
 - 可以清楚了解接收多少資料
 - 判斷當前資料該丟向哪個 ```queue``` 或者哪些不同的 ```queue```
 
-![](https://www.rabbitmq.com/img/tutorials/exchanges.png)
+### exchange type:
+- direct
+- topic
+- headers
+- fanout
+
+### 注意:
+- 如果 ```exchange``` 沒有綁定 ```queue```，訊息將會流失或被丟棄。
+
+![](https://kucw.github.io/images/blog/rabbitmq_subscribe.png)
