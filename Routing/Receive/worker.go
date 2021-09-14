@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/streadway/amqp"
@@ -19,7 +20,7 @@ type AggregatorOption struct {
 func main() {
 	arg := AggregatorOption{
 		Timer:       time.Second * 60,
-		UpperLimmit: 10,
+		UpperLimmit: 1,
 	}
 
 	// 處理 MQ 事項
@@ -55,13 +56,13 @@ func MQHandle(arg AggregatorOption) error {
 
 	// create a new exchange if exchange is not exist, if exchange not exist, is not allow to bind the queue, you'll geet mistake
 	err := ch.ExchangeDeclare(
-		"logs",   // name
-		"direct", // type
-		true,     // durable
-		false,    // auto-deleted
-		false,    // internal
-		false,    // no-wait
-		nil,      // arguments
+		"logs_direct", // name
+		"direct",      // type
+		true,          // durable
+		false,         // auto-deleted
+		false,         // internal
+		false,         // no-wait
+		nil,           // arguments
 	)
 
 	if err != nil {
@@ -83,17 +84,28 @@ func MQHandle(arg AggregatorOption) error {
 		return err
 	}
 
-	// binding exchange and queue
-	err = ch.QueueBind(
-		q.Name, // queue name
-		"",     // routing key
-		"logs", // exchange
-		false,
-		nil,
-	)
+	fmt.Println("====>", os.Args)
+	if len(os.Args) < 2 {
+		log.Printf("Usage: %s [info] [warning] [error]", os.Args[0])
+		os.Exit(0)
+	}
 
-	if err != nil {
-		log.Fatalf("%s: %s", "Failed to bind a queue", err)
+	for _, s := range os.Args[1:] {
+		log.Printf("Binding queue %s to exchanfe %s with routing key %s", q.Name, "logs_direct", s)
+
+		// binding exchange and queue
+		err = ch.QueueBind(
+			q.Name,        // queue name
+			s,             // routing key
+			"logs_direct", // exchange name
+			false,
+			nil,
+		)
+
+		if err != nil {
+			log.Fatalf("%s: %s", "Failed to bind a queue", err)
+		}
+
 	}
 
 	// receive queue

@@ -15,13 +15,13 @@ func main() {
 
 	// create a new exchange if exchange is not exist
 	err := ch.ExchangeDeclare(
-		"logs",   // name
-		"direct", // type
-		true,     // durable
-		false,    // auto-deleted
-		false,    // internal
-		false,    // no-wait
-		nil,      // arguments
+		"logs_direct", // name
+		"direct",      // type
+		true,          // durable
+		false,         // auto-deleted
+		false,         // internal
+		false,         // no-wait
+		nil,           // arguments
 	)
 
 	if err != nil {
@@ -30,15 +30,15 @@ func main() {
 
 	body := bodyFrom(os.Args)
 
-	for i := 0; i <= 100000; i++ {
+	for i := 0; i <= 1; i++ {
 
 		msg := fmt.Sprintf("%d,%v", i, body)
 
 		err := ch.Publish(
-			"logs", // exchange
-			"",     // routing key
-			false,  // mandatory
-			false,
+			"logs_direct",         // exchange
+			severityFrom(os.Args), // routing key
+			false,                 // mandatory
+			false,                 // immediate
 			amqp.Publishing{
 				DeliveryMode: amqp.Persistent,
 				ContentType:  "text/plain",
@@ -59,6 +59,17 @@ func bodyFrom(args []string) string {
 	} else {
 		s = strings.Join(args[1:], " ")
 	}
+	return s
+}
+
+func severityFrom(arg []string) string {
+	var s string
+	if (len(arg) < 2) || os.Args[1] == "" {
+		s = "info"
+	} else {
+		s = os.Args[1]
+	}
+
 	return s
 }
 

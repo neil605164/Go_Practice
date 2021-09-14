@@ -1,5 +1,16 @@
 # RabbitMQ
 
+## Queue
+
+進入Queue的資料在有人收走以前是不會消失的
+
+- name: string => queue 名稱
+- durable: bool => 系統關機後會保存
+- delete: bool => 執行完 queue 會自動刪除
+- exclusive: bool
+- no-wait: bool
+- arguments: bool => 提供 header 值，可在 header exchange 使用
+
 ## Direct 模式
 
 最簡單的模式，只會有一個 Producer 負責發送 message 到 Queue 裡、而也只有一個 Consumer 去 Queue 裡消費 message
@@ -29,12 +40,18 @@
 - 判斷當前資料該丟向哪個 ```queue``` 或者哪些不同的 ```queue```
 
 ### exchange type:
-- direct
-- topic
-- headers
-- fanout
+- direct: 照Routing Key將資料倒給對應的Queue，如果沒有綁定Queue會自動丟棄進來的資料
+- topic: 同direct，差別: topic支援 # 或 * 的模糊搜尋，如果沒有綁定Queue會自動丟棄進來的資料
+    - `#` : 多字串
+    - `*`: 單一字串
+- headers: 根據資料的header做導向(不實用)
+- fanout: 將資料倒給所有已綁定在的 queue，如果沒有綁定Queue會自動丟棄進來的資料
 
 ### 注意:
 - 如果 ```exchange``` 沒有綁定 ```queue```，訊息將會流失或被丟棄。
 
 ![](https://kucw.github.io/images/blog/rabbitmq_subscribe.png)
+
+---
+
+## Router 模式
