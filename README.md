@@ -55,3 +55,12 @@
 ---
 
 ## Router 模式
+```router``` 是強化 ```exchange``` 的功能而存在。
+當 ```Producer``` 把 ```message``` 丟給 ```Exchange``` 時，須同時附上一個 ```routing key``` ， 而 ```Exchange``` 就會根據這個 ```routing key```，將 ```message``` 丟到指定的 ```Queue``` 上
+
+![](https://kucw.github.io/images/blog/rabbitmq_routing1.png)
+
+## Topic 模式
+```Topic``` 與 ```router``` 相同，只是 ```routing key``` 可以進化成使用「**模糊**」綁定。
+
+![](https://kucw.github.io/images/blog/rabbitmq_topics.png)
