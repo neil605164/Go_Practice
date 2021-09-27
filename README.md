@@ -62,5 +62,18 @@
 
 ## Topic 模式
 ```Topic``` 與 ```router``` 相同，只是 ```routing key``` 可以進化成使用「**模糊**」綁定。
+- ```*``` : 可以取代一個文字
+- ```#``` : 可以取代 0 ~ N 個文字
+
+### example: 
+- ```quick.orange.rabbit``` : 該 ```router key``` 會被送往 ```Q1```,```Q2``` ```borker```
+- ```lazy.orange.elephant``` : 該 ```router key``` 會被送往 ```Q1```,```Q2``` ```borker```
+- ```quick.orange.fox``` : 該 ```router key``` 會被送往 ```Q1``` ```borker```
+- ```lazy.brown.fox``` : 該 ```router key``` 會被送往 ```Q2``` ```borker```
+- ```lazy.pink.rabbit``` : 該 ```router key``` 會被送往 ```Q2``` ```borker```, 但是只會被推送一次
+- ```quick.brown.fox``` : 該 ```router key``` 不會被送到 ```broker``` ，且會被忽遺棄掉
+- ```orange``` : 該 ```router key``` 不會被送到 ```broker``` ，且會被忽遺棄掉
+- ```quick.orange.male.rabbit``` : 該 ```router key``` 不會被送到 ```broker``` ，且會被忽遺棄掉
+- ```lazy.orange.male.rabbit``` : 該 ```router key``` 會被送往 ```Q2``` ```borker```
 
 ![](https://kucw.github.io/images/blog/rabbitmq_topics.png)
