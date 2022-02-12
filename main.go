@@ -25,5 +25,9 @@ func main() {
 	app.GetDriveList(srv)
 
 	// 創建資料
-	app.CreateToDrive(srv, "sample.txt", "1n0UbDipl2SmuoiUNdszAdJhVyGI46HWs")
+	// app.CreateToDrive(srv, "sample.txt", "1n0UbDipl2SmuoiUNdszAdJhVyGI46HWs")
+
+	// 刪除資料
+	// app.DeleteToDrive(srv, "15Q9LHNTrnZ0eXn8nXp4Qk9dKb4b3FgP9")
+
 }

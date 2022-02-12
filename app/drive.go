@@ -55,7 +55,7 @@ func GetDriveList(srv *drive.Service) {
 	}
 }
 
-// 新增檔案至 google drive
+// CreateToDrive 新增檔案至 google drive
 func CreateToDrive(srv *drive.Service, filename string, parents ...string) {
 	// 創建文檔的格式，若要創建資料夾請使用 application/vnd.google-apps.folder
 	baseMimeType := "text/plain" // MimeType
@@ -82,4 +82,13 @@ func CreateToDrive(srv *drive.Service, filename string, parents ...string) {
 		log.Fatalln(err)
 	}
 	fmt.Printf("%s\n", res.Id)
+}
+
+// DeleteToDrive 新增檔案至 google drive
+func DeleteToDrive(srv *drive.Service, id string) {
+
+	err := srv.Files.Delete(id).Do()
+	if err != nil {
+		log.Fatalln(err)
+	}
 }
