@@ -1,11 +1,13 @@
 package app
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -36,6 +38,7 @@ func ServiceAccount(credentialFile string) *http.Client {
 	return client
 }
 
+// GetDriveList 取 drive 清單
 func GetDriveList(srv *drive.Service) {
 	r, err := srv.Files.List().PageSize(10).
 		Fields("nextPageToken, files(id, name)").Do()
@@ -50,4 +53,33 @@ func GetDriveList(srv *drive.Service) {
 			fmt.Printf("%s (%s)\n", i.Name, i.Id)
 		}
 	}
+}
+
+// 新增檔案至 google drive
+func CreateToDrive(srv *drive.Service, filename string, parents ...string) {
+	// 創建文檔的格式，若要創建資料夾請使用 application/vnd.google-apps.folder
+	baseMimeType := "text/plain" // MimeType
+
+	file, err := os.Open(filename)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fileInf, err := file.Stat()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	defer file.Close()
+	f := &drive.File{
+		Name:    filename,
+		Parents: parents,
+	}
+	res, err := srv.Files.
+		Create(f).
+		ResumableMedia(context.Background(), file, fileInf.Size(), baseMimeType).
+		ProgressUpdater(func(now, size int64) { fmt.Printf("%d, %d\r", now, size) }).
+		Do()
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Printf("%s\n", res.Id)
 }

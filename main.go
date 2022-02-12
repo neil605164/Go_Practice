@@ -23,4 +23,7 @@ func main() {
 
 	// 取 drive 清單內容
 	app.GetDriveList(srv)
+
+	// 創建資料
+	app.CreateToDrive(srv, "sample.txt", "1n0UbDipl2SmuoiUNdszAdJhVyGI46HWs")
 }
