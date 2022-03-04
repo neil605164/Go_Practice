@@ -79,9 +79,26 @@ func CreateToDrive(srv *drive.Service, filename string, parents ...string) {
 		ProgressUpdater(func(now, size int64) { fmt.Printf("%d, %d\r", now, size) }).
 		Do()
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln("", err)
 	}
 	fmt.Printf("%s\n", res.Id)
+}
+
+func CreateDir(srv *drive.Service, dirname string, parents ...string) {
+	baseMimeType := "application/vnd.google-apps.folder" // 創資料夾
+
+	f := &drive.File{
+		Name: dirname,
+		// 可轉換為google driver檔案格式, 若不需轉換帶入空值即可
+		MimeType: baseMimeType,
+		Parents:  parents,
+	}
+
+	res, err := srv.Files.Create(f).SupportsAllDrives(true).Fields("id").Do()
+	if err != nil {
+		log.Fatalf("Unable to retrieve Drive client: %v", err)
+	}
+	fmt.Println("----->res", res.Id)
 }
 
 // DeleteToDrive 新增檔案至 google drive
