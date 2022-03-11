@@ -40,8 +40,17 @@ func ServiceAccount(credentialFile string) *http.Client {
 
 // GetDriveList 取 drive 清單
 func GetDriveList(srv *drive.Service) {
+	// query 指定環境 + 資料夾格式 + 不在垃圾桶內
+	// query := "'" + searchReq.FolderID + "'" + " in parents and " + searchReq.MimeType + " and trashed = false"
+
+	// r, err := srv.Files.List().IncludeTeamDriveItems(true).
+	// 	SupportsAllDrives(true).Q(query).
+	// 	Spaces("drive").PageSize(100).Fields("nextPageToken, files(id, name)").
+	// 	Do()
+
 	r, err := srv.Files.List().PageSize(10).
 		Fields("nextPageToken, files(id, name)").Do()
+
 	if err != nil {
 		log.Fatalf("Unable to retrieve files: %v", err)
 	}
