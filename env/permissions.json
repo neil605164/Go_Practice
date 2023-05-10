@@ -1,0 +1,158 @@
+{
+    "admin_guard": {
+      "agents": [
+        "list_agents",
+        "create_agent",
+        "edit_agent"
+      ],
+      "work": [
+        "list_works",
+        "create_work",
+        "edit_work",
+        "delete_work",
+        "show_work",
+        "list_feature-works",
+        "edit_feature-work"
+      ],
+      "plan": [
+        "list_plans",
+        "edit_plan",
+        "list_coupons",
+        "create_coupon",
+        "edit_coupon",
+        "delete_coupon",
+        "list_subscriptions",
+        "edit_subscriptions"
+      ],
+      "user": [
+        "list_users",
+        "create_user",
+        "edit_user",
+        "delete_user",
+        "list_review-user",
+        "show_user",
+        "edit_review-user"
+      ],
+      "order": [
+        "list_orders",
+        "show_orders-refund",
+        "edit_orders-refund"
+      ],
+      "permission": [
+        "list_admins",
+        "create_admin",
+        "edit_admin",
+        "delete_admin",
+        "list_roles",
+        "create_role",
+        "edit_role",
+        "delete_role"
+      ],
+      "channel": [
+        "list_channel-analytics",
+        "list_channels",
+        "create_channel",
+        "edit_channel",
+        "show_channel",
+        "delete_channel",
+        "list_campaigns",
+        "create_campaign",
+        "update_campaign",
+        "edit_campaign",
+        "delete_campaign",
+        "list_channel-coupon-usage",
+        "show_campaign-commission",
+        "edit_campaign-commission",
+        "list_channel-agent-withdrawals",
+        "approve_channel-agent-withdrawal",
+        "update_channel-agent-withdrawal"
+      ],
+      "dictionary": [
+        "list_topics",
+        "create_topic",
+        "edit_topic",
+        "delete_topic",
+        "list_tags",
+        "create_tag",
+        "edit_tag",
+        "delete_tag",
+        "list_directors",
+        "create_director",
+        "edit_director",
+        "delete_director",
+        "list_actors",
+        "create_actor",
+        "edit_actor",
+        "delete_actor",
+        "list_genres",
+        "create_genre",
+        "edit_genre",
+        "delete_genre"
+      ],
+      "landingPage": [
+        "list_advertisements",
+        "create_advertisement",
+        "edit_advertisement",
+        "delete_advertisement",
+        "list_landing-page-works",
+        "create_landing-page-work"
+      ],
+      "analytics": [
+        "list_analytics"
+      ],
+      "wte": [
+        "list_events",
+        "show_event",
+        "create_event",
+        "edit_event",
+        "list_suggestions",
+        "edit_suggestion",
+        "list_wte-statistics",
+        "list_wte-withdrawals",
+        "edit_wte-withdrawals"
+      ],
+      "operationLog": [
+        "list_operation-logs"
+      ],
+      "announcements": [
+        "list_announcements",
+        "delete_announcement",
+        "create_announcement",
+        "edit_announcement"
+      ],
+      "recommendKeywordSearch": [
+        "list_recommend-keywords",
+        "delete_recommend-keyword",
+        "create_recommend-keyword",
+        "edit_recommend-keyword"
+      ],
+      "configs": [
+        "find_config",
+        "update_config"
+      ],
+      "hotKeywordSearch": [
+        "list_hot-keywords",
+        "delete_hot-keyword",
+        "create_hot-keyword",
+        "edit_hot-keyword"
+      ],
+      "searchStatistics": [
+        "list_search-statistics",
+        "list_hot-search-statistics",
+        "list_recommend-search-statistics",
+        "list_organic-search-statistics"
+      ],
+      "channel-agents": [
+        "create_channel-agent",
+        "list_channel-agents",
+        "show_channel-agent",
+        "edit_channel-agent",
+        "delete_channel-agent"
+      ],
+      "blocks": [
+        "list_blocks",
+        "show_blocks",
+        "edit_block"
+      ]
+    }
+  }
