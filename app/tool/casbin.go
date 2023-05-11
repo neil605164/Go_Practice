@@ -26,16 +26,20 @@ type RoleWithPermissions struct {
 
 // casbin 設定
 func SetupCasbin() {
-	// 使用DB 當police
+	// 使用 mysql 适配器
 	adapter, err := gormadapter.NewAdapterByDB(database.Db)
 	if err != nil {
 		log.Fatal("Carbins adapter error: ", err)
 	}
 
+	// 通过mysql适配器新建一个enforcer
 	Enforcer, err = casbin.NewEnforcer("./env/casbin_rbac_with_root_model.conf", adapter)
 	if err != nil {
 		log.Fatal("Carbins init error: ", err)
 	}
+
+	// 日志记录
+	Enforcer.EnableLog(true)
 }
 
 func GetPermissionsByRole(user string) []string {
