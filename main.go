@@ -1,11 +1,9 @@
 package main
 
 import (
-	"Go_Practice/app/router"
 	"Go_Practice/app/tool"
 	"Go_Practice/internal/database"
-
-	"github.com/gin-gonic/gin"
+	"fmt"
 )
 
 func init() {
@@ -17,7 +15,22 @@ func init() {
 }
 
 func main() {
-	r := gin.Default()
-	router.ProviderRouter(r)
-	r.Run(":3001")
+	// r := gin.Default()
+	// router.ProviderRouter(r)
+	// r.Run(":3001")
+
+	fmt.Println("Start")
+
+	ok, err := tool.Enforcer.Enforce("neil", "it", "rd1", "read")
+	if err != nil {
+		fmt.Println("===>", err)
+		return
+	}
+
+	if !ok {
+		fmt.Println("access denied")
+		return
+	}
+
+	fmt.Println("Pass")
 }

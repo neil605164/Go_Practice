@@ -13,22 +13,42 @@ func ProviderRouter(r *gin.Engine) {
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"code": 400, "message": "Bad Request"})
 	})
-	r.GET("/", middleware.PermissionCheck, handler.GetAdmin)
+	r.GET("/", middleware.PermissionCheck("adminList"), handler.GetAdmin)
 
 	auth := r.Group("/api")
 	{
-		// 模拟添加一条Policy策略
-		auth.POST("acs", func(c *gin.Context) {
-			subject := "tom"
-			object := "/api/routers"
-			action := "POST"
-			result, err := tool.Enforcer.AddPolicy(subject, object, action)
+		auth.POST("group", func(c *gin.Context) {
+			company := "bbin"
+			org := "it"
+			depart := "rd1"
+
+			result, err := tool.Enforcer.AddGroupingPolicy(depart, company, org)
 			if err != nil {
 				c.JSON(http.StatusOK, err)
 				return
 			}
 			if !result {
-				c.JSON(http.StatusOK, "fail")
+				c.JSON(http.StatusOK, "add group fail")
+				return
+			}
+
+			c.JSON(http.StatusOK, "success")
+		})
+		// 模拟添加一条Policy策略
+		auth.POST("policy", func(c *gin.Context) {
+			// company := "bbin"
+			org := "it"
+			depart := "rd1"
+			permission := "UserList"
+			action := "POST"
+
+			result, err := tool.Enforcer.AddPolicy(org, depart, permission, action)
+			if err != nil {
+				c.JSON(http.StatusOK, err)
+				return
+			}
+			if !result {
+				c.JSON(http.StatusOK, "add policy fail")
 				return
 			}
 			c.JSON(http.StatusOK, "success")
@@ -47,7 +67,7 @@ func ProviderRouter(r *gin.Engine) {
 			c.JSON(http.StatusOK, "success")
 		})
 		// 获取路由列表
-		auth.POST("/routers", middleware.PermissionCheck, func(c *gin.Context) {
+		auth.POST("/routers", middleware.PermissionCheck("UserList"), func(c *gin.Context) {
 			type data struct {
 				Method string `json:"method"`
 				Path   string `json:"path"`
@@ -69,7 +89,7 @@ func ProviderRouter(r *gin.Engine) {
 	// 定义路由组
 	user := r.Group("/api/v1")
 	// 使用访问控制中间件
-	user.Use(middleware.PermissionCheck)
+	user.Use(middleware.PermissionCheck("UserList"))
 	{
 		user.POST("user", func(c *gin.Context) {
 			c.JSON(200, gin.H{"code": 200, "message": "user add success"})
