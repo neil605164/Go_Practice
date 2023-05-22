@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gitlab.com/demo-pkg/subgroup/postman"
+	"gitlab.com/demo-pkg/subgroup/thirdgroup/fourth_group/postman"
 )
 
 func main() {

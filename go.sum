@@ -1,4 +1,4 @@
 github.com/goccy/go-json v0.10.2 h1:CrxCmQqYDkv1z7lO7Wbh2HN93uovUHgrECaO5ZrCXAU=
 github.com/goccy/go-json v0.10.2/go.mod h1:6MelG93GURQebXPDq3khkgXZkazVtN9CRI+MGFi0w8I=
-gitlab.com/demo-pkg/subgroup/postman.git v0.0.3 h1:5/hJbDyFrZ8O2QUsndHhxgvoCsBHmFpx32f1JoWyomU=
-gitlab.com/demo-pkg/subgroup/postman.git v0.0.3/go.mod h1:l0v+UpkSP+fg7NzTZIHowIdIXPz+3zgjK8jYClbMaAA=
+gitlab.com/demo-pkg/subgroup/thirdgroup/fourth_group/postman.git v0.0.1 h1:EmkFXEml492pQKg0Yw/E+j/EDARoS36+Go4vnf7uYKE=
+gitlab.com/demo-pkg/subgroup/thirdgroup/fourth_group/postman.git v0.0.1/go.mod h1:6vO/FKc3uCNc0H++Hi3bvA4grP51IK0RkjHL3u/PZH0=
