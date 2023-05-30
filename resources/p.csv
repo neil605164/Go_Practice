@@ -1,21 +1,20 @@
-p, admina, companya, orga, departa, GetUserList
-p, adminb, companya, orgb, departb, UpdateUserList
-p, admina, companyb, orga, departa, DeleteUserList
-p, adminc, companyc, orgc, departc, GetUserList
+p, departa, companya, orga, GetUserList
+p, departb, companya, orgb, UpdateUserList
+p, departa, companyb, orga, DeleteUserList
+p, departc, companyc, orgc, GetUserList
 
 g, orga, companya
 g, orgb, companyb
 g, orgc, companyc
 
+g, departa, orga
+g, departb, orgb
+
 g, admina, departa 
 g, adminb, departb
 g, adminc, departc
 
-g, departa, orga
-g, departb, orgb
 
-g, shenyi, admina
-g, lisi, adminb
-g, neil, adminc
+
 
 
