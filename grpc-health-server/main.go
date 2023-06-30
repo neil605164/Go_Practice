@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"go_practice/grpc-server/app/handler"
-	"go_practice/pkg/pb/message"
 	"log"
 	"net"
 
@@ -20,15 +18,14 @@ func main() {
 		log.Fatalf("failed to listen: %v \n", err)
 	}
 
-	grpcServer := grpc.NewServer()
-	message.RegisterCalculatorServiceServer(grpcServer, &handler.Server{})
+	server := grpc.NewServer()
 
 	// health server
 	healthServer := health.NewServer()
 	healthServer.SetServingStatus("grpc.health.v1.Health", healthpb.HealthCheckResponse_SERVING)
-	healthpb.RegisterHealthServer(grpcServer, healthServer)
+	healthpb.RegisterHealthServer(server, healthServer)
 
-	if err := grpcServer.Serve(lis); err != nil {
+	if err := server.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v \n", err)
 	}
 }
