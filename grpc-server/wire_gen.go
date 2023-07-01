@@ -8,11 +8,17 @@ package main
 
 import (
 	"go_practice/grpc-server/app/Internal/grpc_conn"
+	"go_practice/grpc-server/app/handler"
 )
 
 // Injectors from wire.go:
 
-func Initialize() (grpcconn.IGrpcConn, error) {
-	iGrpcConn := grpcconn.ProviderGrpcService()
-	return iGrpcConn, nil
+func Initialize() (grpcconn.GrpcConn, error) {
+	iHealth := handler.ProviderHealthCli()
+	iCalculator := handler.ProviderCalculatorCli()
+	grpcConn := grpcconn.GrpcConn{
+		Health:     iHealth,
+		Calculator: iCalculator,
+	}
+	return grpcConn, nil
 }

@@ -4,13 +4,27 @@ import (
 	"context"
 	"fmt"
 	"go_practice/pkg/pb/message"
+
+	"google.golang.org/grpc"
 )
 
-type Server struct {
+type ICalculator interface {
+	RegisterCalculatorService(grpcServer *grpc.Server)
+}
+
+type calculator struct {
 	message.UnsafeCalculatorServiceServer
 }
 
-func (c *Server) Sum(ctx context.Context, req *message.CalculatorRequest) (*message.CalculatorResponse, error) {
+func ProviderCalculatorCli() ICalculator {
+	return &calculator{}
+}
+
+func (c *calculator) RegisterCalculatorService(grpcServer *grpc.Server) {
+	message.RegisterCalculatorServiceServer(grpcServer, &calculator{})
+}
+
+func (c *calculator) Sum(ctx context.Context, req *message.CalculatorRequest) (*message.CalculatorResponse, error) {
 	fmt.Printf("Sum function is invoked with %v \n", req)
 
 	a := req.GetA()
