@@ -14,11 +14,11 @@ import (
 // Injectors from wire.go:
 
 func Initialize() (grpcconn.GrpcConn, error) {
-	iHealth := handler.ProviderHealthCli()
-	iCalculator := handler.ProviderCalculatorCli()
+	healthCli := handler.ProviderHealthCli()
+	calculator := handler.ProviderCalculatorCli()
 	grpcConn := grpcconn.GrpcConn{
-		Health:     iHealth,
-		Calculator: iCalculator,
+		Health:     healthCli,
+		Calculator: calculator,
 	}
 	return grpcConn, nil
 }

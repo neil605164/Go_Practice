@@ -9,17 +9,17 @@ import (
 )
 
 type IGrpcConn interface {
-	GrpcConnect()
+	Run()
 }
 
 type GrpcConn struct {
-	Health     handler.IHealth
-	Calculator handler.ICalculator
+	Health     *handler.HealthCli
+	Calculator *handler.Calculator
 }
 
 func ProviderGrpcService(
-	health handler.IHealth,
-	calculator handler.ICalculator,
+	health *handler.HealthCli,
+	calculator *handler.Calculator,
 ) IGrpcConn {
 	return &GrpcConn{
 		Health:     health,
@@ -27,7 +27,7 @@ func ProviderGrpcService(
 	}
 }
 
-func (g *GrpcConn) GrpcConnect() {
+func (g *GrpcConn) Run() {
 	lis, err := net.Listen("tcp", "localhost:50051")
 	if err != nil {
 		log.Fatalf("failed to listen: %v \n", err)

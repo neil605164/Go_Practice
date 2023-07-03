@@ -8,23 +8,19 @@ import (
 	"google.golang.org/grpc"
 )
 
-type ICalculator interface {
-	RegisterCalculatorService(grpcServer *grpc.Server)
-}
-
-type calculator struct {
+type Calculator struct {
 	message.UnsafeCalculatorServiceServer
 }
 
-func ProviderCalculatorCli() ICalculator {
-	return &calculator{}
+func ProviderCalculatorCli() *Calculator {
+	return &Calculator{}
 }
 
-func (c *calculator) RegisterCalculatorService(grpcServer *grpc.Server) {
-	message.RegisterCalculatorServiceServer(grpcServer, &calculator{})
+func (c *Calculator) RegisterCalculatorService(grpcServer *grpc.Server) {
+	message.RegisterCalculatorServiceServer(grpcServer, c)
 }
 
-func (c *calculator) Sum(ctx context.Context, req *message.CalculatorRequest) (*message.CalculatorResponse, error) {
+func (c *Calculator) Sum(ctx context.Context, req *message.CalculatorRequest) (*message.CalculatorResponse, error) {
 	fmt.Printf("Sum function is invoked with %v \n", req)
 
 	a := req.GetA()

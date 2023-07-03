@@ -6,18 +6,14 @@ import (
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
 )
 
-type IHealth interface {
-	RegisterHealthService(grpcServer *grpc.Server)
+type HealthCli struct {
 }
 
-type healthCli struct {
+func ProviderHealthCli() *HealthCli {
+	return &HealthCli{}
 }
 
-func ProviderHealthCli() IHealth {
-	return &healthCli{}
-}
-
-func (h *healthCli) RegisterHealthService(grpcServer *grpc.Server) {
+func (h *HealthCli) RegisterHealthService(grpcServer *grpc.Server) {
 
 	// Register Health Service
 	healthServer := health.NewServer()

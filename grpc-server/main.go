@@ -12,5 +12,5 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	grpc.GrpcConnect()
+	grpc.Run()
 }
