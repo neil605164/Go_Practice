@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  kafka-producer:
+    container_name: kafka-producer
+    build: 
+      context: .
+    volumes:
+      - .:/go/src/Go_Practice/producer    
+    working_dir: /go/src/Go_Practice/producer
+    command: air -c .air.toml
+    networks:
+      - web_service
+
+networks:
+  web_service:
+    external: true

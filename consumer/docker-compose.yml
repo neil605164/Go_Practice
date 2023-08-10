@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  kafka-consumer:
+    container_name: kafka-consumer
+    build: 
+      context: .
+    volumes:
+      - .:/go/src/Go_Practice/consumer    
+    working_dir: /go/src/Go_Practice/consumer
+    command: air -c .air.toml
+    networks:
+      - web_service
+
+networks:
+  web_service:
+    external: true
