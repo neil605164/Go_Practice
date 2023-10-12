@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  rabbit:
+    image: rabbitmq:3.12.6-management
+    hostname: rabbit
+    container_name: "rabbitmq"
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=root
+      - RABBITMQ_DEFAULT_PASS=root
+    # volumes:
+      # - ./data:/var/lib/rabbitmq
+    networks:
+        - web_service
+
+networks:
+  web_service:
+    external: true
