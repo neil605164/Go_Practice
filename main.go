@@ -1,7 +1,23 @@
 package main
 
-import "fmt"
+import (
+	"Go_Practice/basic"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	bas := basic.ProviderBasicLog()
+	bas.Info()
+	bas.Debug()
+
+	///////
+	a := basic.A{}
+	pa := basic.ProviderBasicLog(basic.WithCustomerOption(&a))
+	pa.Info()
+	pa.Debug()
+
+	////////
+	b := basic.B{}
+	pb := basic.ProviderBasicLog(basic.WithCustomerOption(&b))
+	pb.Info()
+	pb.Debug()
 }
