@@ -1,7 +1,14 @@
+/*
+	Design Pattern: Method Chaining
+*/
+
 package main
 
-import "fmt"
+import (
+	"Go_Practice/mychain"
+)
 
 func main() {
-	fmt.Println("Hello World")
+	c := mychain.NewMyChain()
+	c.WithName("neil").WithAge(30).PrintInfo()
 }
