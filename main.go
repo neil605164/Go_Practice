@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"time"
@@ -26,6 +27,9 @@ func main() {
 
 	collection := client.Database("your_database").Collection("your_collection")
 
+	// first
+	// First(collection)
+
 	// Insert One
 	// InsertOne(collection)
 
@@ -33,10 +37,10 @@ func main() {
 	// InsertMany(collection)
 
 	// Insert Many Ignore duplicate
-	// InsertManIgnoreDuplicate(collection)
+	InsertManyIgnoreDuplicate(collection)
 
 	// Insert Many If duplicate then Ignore
-	InsertManIgnoreDuplicateIfAlreadyExist(collection)
+	// InsertManyIgnoreDuplicateIfAlreadyExist(collection)
 }
 
 func Conn() *mongo.Client {
@@ -59,6 +63,25 @@ func Conn() *mongo.Client {
 	fmt.Println("Connected to MongoDB!")
 
 	return client
+}
+
+func First(collection *mongo.Collection) {
+
+	userA := User{
+		Id:   time.Now().UnixMilli(),
+		Name: "neil",
+	}
+
+	temp := User{
+		Id:   time.Now().UnixMilli(),
+		Name: "neil",
+	}
+	if err := collection.FindOne(context.Background(), userA).Decode(&temp); err != nil {
+
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			log.Fatal("error is ===>", err)
+		}
+	}
 }
 
 func InsertOne(collection *mongo.Collection) {
@@ -107,7 +130,7 @@ func InsertMany(collection *mongo.Collection) {
 	}
 }
 
-func InsertManIgnoreDuplicate(collection *mongo.Collection) {
+func InsertManyIgnoreDuplicate(collection *mongo.Collection) {
 
 	userList := make([]any, 0)
 	userA := User{
@@ -135,10 +158,11 @@ func InsertManIgnoreDuplicate(collection *mongo.Collection) {
 
 	userList = append(userList, userC)
 
-	opt := options.InsertMany().SetOrdered(false)
+	var opt []*options.InsertManyOptions
+	opt = append(opt, options.InsertMany().SetOrdered(false))
 
 	// Insert One
-	result, err := collection.InsertMany(context.Background(), userList, opt)
+	result, err := collection.InsertMany(context.Background(), userList, opt...)
 	if err != nil {
 		log.Println("error is ===>", err)
 	}
@@ -148,7 +172,7 @@ func InsertManIgnoreDuplicate(collection *mongo.Collection) {
 	}
 }
 
-func InsertManIgnoreDuplicateIfAlreadyExist(collection *mongo.Collection) {
+func InsertManyIgnoreDuplicateIfAlreadyExist(collection *mongo.Collection) {
 
 	userA := User{
 		Id:   time.Now().UnixMilli(),
