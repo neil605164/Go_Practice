@@ -3,14 +3,18 @@ package main
 import "fmt"
 
 func main() {
-	u := Provider("user")
+	basicUser := ProviderBasicInfo()
+
+	u := ProviderUser(basicUser)
 	u.SetName("neil")
 	fmt.Println(u.GetName())
 
 	u.SetSex("male")
 	fmt.Println(u.GetSex())
 
-	uo := Provider("other_user")
+	//////////////////////
+
+	uo := ProviderUserOther(basicUser)
 	uo.SetName("neil")
 	fmt.Println(uo.GetName())
 
@@ -24,21 +28,16 @@ type IUser interface {
 	SetName(name string)
 }
 
-func Provider(u string) IUser {
+func ProviderUser(base IBasicUser) IUser {
 
-	switch u {
-	case "user":
-		return &user{
-			IBasicUser: ProviderBasicInfo(),
-		}
-	case "other_user":
-		return &otherUser{
-			IBasicUser: ProviderBasicInfo(),
-		}
-	default:
-		return &user{
-			IBasicUser: ProviderBasicInfo(),
-		}
+	return &user{
+		IBasicUser: base,
+	}
+}
+
+func ProviderUserOther(base IBasicUser) IUser {
+	return &otherUser{
+		IBasicUser: base,
 	}
 }
 
