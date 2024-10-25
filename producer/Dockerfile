@@ -4,4 +4,4 @@ FROM golang:1.20-alpine
 # go install air
 RUN apk add git \
     && apk add build-base \
-    && go install github.com/cosmtrek/air@latest
+    && go install github.com/cosmtrek/air@v1.49.0

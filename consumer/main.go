@@ -9,19 +9,23 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
+const (
+	kafkaURL = "kafka:9092"
+	topic    = "neil_test"
+)
+
 func getKafkaReader(kafkaURL, topic string) *kafka.Reader {
 	brokers := strings.Split(kafkaURL, ",")
 	return kafka.NewReader(kafka.ReaderConfig{
-		Brokers:  brokers,
-		Topic:    topic,
-		MinBytes: 10e3, // 10KB
-		MaxBytes: 10e6, // 10MB
+		Brokers: brokers,
+		Topic:   topic,
+		// GroupID: "test", // 有设置 GroupID 没有设置 like single worker ,GroupID like fanout
+		MinBytes: 10e3, // 10KB 最小累積處理的資料量
+		MaxBytes: 10e6, // 10MB 最大累積處理的資料量
 	})
 }
 
 func main() {
-	kafkaURL := "kafka:9092"
-	topic := "neil_test"
 
 	reader := getKafkaReader(kafkaURL, topic)
 

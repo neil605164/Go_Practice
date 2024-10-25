@@ -44,7 +44,7 @@ docker network ls | grep "web_service" >/dev/null 2>&1
         docker network create web_service
     fi
 
-cp $WORK_PATH/../.env.default $WORK_PATH/../.env
+cp $WORK_PATH/.env.default $WORK_PATH/.env
 
 # 判斷是否需要寫入 .env.default
 less $WORK_PATH/../.env|grep "VOLUME_PATH="
@@ -53,4 +53,4 @@ if [ $? -ne 0 ]; then
 fi
 
 # 啟動容器服務
-docker-compose up -d
+docker-compose -f $WORK_PATH/docker/docker-compose.yml up -d
